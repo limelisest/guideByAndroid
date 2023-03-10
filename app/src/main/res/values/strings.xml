@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">自助导购系统手机应用</string>
+    <string name="title_home">主页</string>
+    <string name="title_buy_list">商店</string>
+    <string name="title_shopping_cart">购物车</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

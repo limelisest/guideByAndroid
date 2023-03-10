@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.limelisest.guide.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_buy_list"
+        android:name="com.limelisest.guide.ui.buy_list.ItemFragment"
+        android:label="@string/title_buy_list"
+        tools:layout="@layout/fragment_buy_list" />
+
+    <fragment
+        android:id="@+id/navigation_shopping_cart"
+        android:name="com.limelisest.guide.ui.shopping_cart.ShoppingCartItemFragment"
+        android:label="@string/title_shopping_cart"
+        tools:layout="@layout/fragment_shopping_cart_list" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.limelisest.guide.ui.register.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+</navigation>
