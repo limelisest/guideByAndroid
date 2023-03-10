@@ -36,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
+    private AppBarConfiguration appBarConfiguration;
     public LoginContent loginContent;
     private ActivityMainBinding binding;
     private ScheduledExecutorService scheduler;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         loginContent=new LoginContent();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+
         setContentView(binding.getRoot());
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+        appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_buy_list, R.id.navigation_shopping_cart)
                 .build();
 
@@ -104,7 +106,12 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
     // 扫描结果回调
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

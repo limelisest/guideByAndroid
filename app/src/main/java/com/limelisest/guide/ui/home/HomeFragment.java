@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment {
         mButtonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.registerFragment);
+                NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_navigation_home_to_registerFragment);
             }
         });
         return root;
