@@ -24,6 +24,7 @@ import com.google.zxing.activity.CaptureActivity;
 import com.google.zxing.util.Constant;
 import com.limelisest.guide.MainActivity;
 import com.limelisest.guide.R;
+import com.limelisest.guide.placeholder.LoginContent;
 import com.limelisest.guide.placeholder.PlaceholderContent;
 import com.limelisest.guide.ui.home.HomeFragment;
 
@@ -84,7 +85,7 @@ public class ShoppingCartItemFragment extends Fragment {
         view.findViewById(R.id.floatingActionButton2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String LoginUser=HomeFragment.LoginUser;
+                String LoginUser= LoginContent.LoginUser;
                 if (LoginUser != null){
                     Toast.makeText(view.getContext(),"登录的账号："+ LoginUser,Toast.LENGTH_SHORT).show();
                     startQrCode();

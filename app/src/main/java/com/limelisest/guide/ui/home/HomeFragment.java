@@ -1,6 +1,8 @@
 package com.limelisest.guide.ui.home;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +18,13 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.limelisest.guide.R;
 import com.limelisest.guide.databinding.FragmentHomeBinding;
+import com.limelisest.guide.placeholder.LoginContent;
 import com.limelisest.guide.placeholder.MyDataBase;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
-    public static String LoginUser=null;
-    public static String LoginPassword=null;
     private FragmentHomeBinding binding;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,43 +33,63 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        EditText mTextUser=root.findViewById(R.id.editTextUser);
-        EditText mTextPassword=root.findViewById(R.id.editTextPassword);
-        Button mButtonLogin=root.findViewById(R.id.buttonLogin);
-        Button mButtonRegister=root.findViewById(R.id.buttonRegister);
-        mButtonLogin.setOnClickListener(new View.OnClickListener() {
-
+        if (LoginContent.LoginUser != null){
+            binding.editTextUser.setText(LoginContent.LoginUser);
+            binding.editTextPassword.setText(LoginContent.LoginPassword);
+            binding.editTextUser.setEnabled(false);
+            binding.editTextPassword.setEnabled(false);
+            binding.buttonLogin.setText("登出");
+        }
+        binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String user= String.valueOf(mTextUser.getText());
-                String password=String.valueOf(mTextPassword.getText());
-                Toast t1= Toast.makeText(root.getContext(), "登录中。。。", Toast.LENGTH_SHORT);
-                t1.show();
-                try {
-                    MyDataBase db=new MyDataBase();
-                    int status=db.LoginUser(user,password);
-                    t1.cancel();
-                    if (status==0){
-                        LoginUser=user;
-                        LoginPassword=password;
-                        Toast.makeText(root.getContext(), "登录成功,账号:"+LoginUser, Toast.LENGTH_SHORT).show();
-                    }else {
-                        Toast.makeText(root.getContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                if (LoginContent.LoginUser == null){
+                    String user= String.valueOf(binding.editTextUser.getText());
+                    String password=String.valueOf(binding.editTextPassword.getText());
+                    Toast t1= Toast.makeText(root.getContext(), "登录中。。。", Toast.LENGTH_SHORT);
+                    t1.show();
+                    try {
+                        MyDataBase db=new MyDataBase();
+                        int status=db.LoginUser(user,password);
+                        t1.cancel();
+                        if (status==0){
+                            LoginContent.LoginUser=user;
+                            LoginContent.LoginPassword=password;
+                            Toast.makeText(root.getContext(), "登录成功,账号:"+LoginContent.LoginUser, Toast.LENGTH_SHORT).show();
+                            binding.editTextUser.setEnabled(false);
+                            binding.editTextPassword.setEnabled(false);
+                            binding.buttonLogin.setText("登出");
+                        }else {
+                            Toast.makeText(root.getContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                }else {
+                    LoginContent.LoginUser = null;
+                    LoginContent.LoginPassword=null;
+                    binding.editTextUser.setEnabled(true);
+                    binding.editTextPassword.setEnabled(true);
+                    binding.buttonLogin.setText("登录");
                 }
+
 
             }
         });
 
-        mButtonRegister.setOnClickListener(new View.OnClickListener() {
+        binding.buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_navigation_home_to_registerFragment);
             }
         });
         return root;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override

@@ -20,7 +20,6 @@ import com.google.zxing.util.Constant;
 import com.limelisest.guide.databinding.ActivityMainBinding;
 import com.limelisest.guide.placeholder.LoginContent;
 import com.limelisest.guide.placeholder.PlaceholderContent;
-import com.limelisest.guide.ui.home.HomeFragment;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
 
         appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_buy_list, R.id.navigation_shopping_cart)
+                R.id.navigation_home, R.id.navigation_buy_list, R.id.navigation_shopping_cart,R.id.navigation_register)
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
@@ -109,15 +108,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
     // 扫描结果回调
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            String LoginUser= HomeFragment.LoginUser;
+            String LoginUser= LoginContent.LoginUser;
             Toast.makeText(this, "扫码成功", Toast.LENGTH_SHORT).show();
             Bundle bundle = data.getExtras();
             String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);

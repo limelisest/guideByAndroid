@@ -2,6 +2,8 @@ package com.limelisest.guide.placeholder;
 
 import android.util.Log;
 
+import com.mysql.jdbc.PreparedStatement;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -76,7 +78,7 @@ public class MyDataBase {
         return -1;
     }
 
-    public int RegisterUser(String USER,String PASSWORD1,String PASSWORD2) throws SQLException {
+    public int RegisterUser(String USER,String PASSWORD) throws SQLException {
         assert connection != null;
         Statement statement = connection.createStatement();
         //sql语句
@@ -86,13 +88,14 @@ public class MyDataBase {
         if (rs.next()){
             return 1;//检测到已有用户名
         }
-        if (!Objects.equals(PASSWORD1, PASSWORD2)){
-            return 2;//密码不相同
-        }
         //插入新用户
-        String sql2= String.format("INSERT INTO `guide`.`user` (`id`, `user_name`, `password`, `info`) VALUES (NULL, '%s', '%s', NULL);", USER,PASSWORD1);
-        ResultSet rs2 = statement.executeQuery(sql2);
-        if (rs2.next()){
+//        String sql2= String.format("INSERT INTO `guide`.`user` (`id`, `user_name`, `password`, `info`) VALUES (NULL, '%s', '%s', NULL);", USER,PASSWORD);
+        PreparedStatement ps = (PreparedStatement) connection.prepareStatement("INSERT INTO `guide`.`user` (`id`, `user_name`, `password`, `info`) VALUES (NULL, ?, ?, NULL);");
+        ps.setString(1,USER);
+        ps.setString(2,PASSWORD);
+        int status= ps.executeUpdate();
+//        ResultSet rs2 = statement.executeQuery(sql2);
+        if (status !=0 ){
             return 0;
         }
         return -1;
