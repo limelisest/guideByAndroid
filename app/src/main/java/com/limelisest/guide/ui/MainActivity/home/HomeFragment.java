@@ -29,7 +29,6 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
-    boolean AdminFlag=false;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -52,6 +51,11 @@ public class HomeFragment extends Fragment {
             binding.editTextUser.setEnabled(false);
             binding.editTextPassword.setEnabled(false);
             binding.spinnerLogin.setEnabled(false);
+            if (LoginContent.Admin){
+                binding.spinnerLogin.setSelection(1);
+            }else {
+                binding.spinnerLogin.setSelection(0);
+            }
             binding.buttonLogin.setText("登出");
         }
         binding.spinnerLogin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -59,12 +63,12 @@ public class HomeFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i){
                     case 0:
-                        AdminFlag=false;
+                        LoginContent.Admin=false;
                         binding.editTextUser.setText("admin");
                         binding.editTextPassword.setText("admin");
                         break;
                     case 1:
-                        AdminFlag=true;
+                        LoginContent.Admin=true;
                         binding.editTextUser.setText("root");
                         binding.editTextPassword.setText("root");
                         break;
@@ -79,7 +83,7 @@ public class HomeFragment extends Fragment {
         binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!AdminFlag){
+                if (!LoginContent.Admin){
                     if (LoginContent.LoginUser == null){
                         String user= String.valueOf(binding.editTextUser.getText());
                         String password=String.valueOf(binding.editTextPassword.getText());
@@ -93,10 +97,7 @@ public class HomeFragment extends Fragment {
                                 LoginContent.LoginUser=user;
                                 LoginContent.LoginPassword=password;
                                 Toast.makeText(root.getContext(), "登录成功,账号:"+LoginContent.LoginUser, Toast.LENGTH_SHORT).show();
-                                binding.editTextUser.setEnabled(false);
-                                binding.editTextPassword.setEnabled(false);
-                                binding.spinnerLogin.setEnabled(false);
-                                binding.buttonLogin.setText("登出");
+                                SetLoginEnable(false);
                             }else {
                                 Toast.makeText(root.getContext(), "登录失败", Toast.LENGTH_SHORT).show();
                             }
@@ -106,13 +107,11 @@ public class HomeFragment extends Fragment {
                     }else {
                         LoginContent.LoginUser = null;
                         LoginContent.LoginPassword=null;
-                        binding.editTextUser.setEnabled(true);
-                        binding.editTextPassword.setEnabled(true);
-                        binding.spinnerLogin.setEnabled(true);
-                        binding.buttonLogin.setText("登录");
+                        SetLoginEnable(true);
                     }
                 }else {
                     if (LoginContent.LoginUser == null){
+
                         String user= String.valueOf(binding.editTextUser.getText());
                         String password=String.valueOf(binding.editTextPassword.getText());
                         Toast t1= Toast.makeText(root.getContext(), "登录中。。。", Toast.LENGTH_SHORT);
@@ -122,15 +121,23 @@ public class HomeFragment extends Fragment {
                             int status=db.LoginAdmin(user,password);
                             t1.cancel();
                             if (status==0){
+                                LoginContent.LoginUser=user;
+                                LoginContent.LoginPassword=password;
+                                SetLoginEnable(false);
                                 Toast.makeText(root.getContext(), "登录成功,管理账号:"+user, Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getContext(), ManagerActivity.class);
                                 startActivityForResult(intent,1);
+
                             }else {
                                 Toast.makeText(root.getContext(), "登录失败", Toast.LENGTH_SHORT).show();
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
+                    }else {
+                        LoginContent.LoginUser = null;
+                        LoginContent.LoginPassword=null;
+                        SetLoginEnable(true);
                     }
                 }
 
@@ -147,6 +154,19 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    private void SetLoginEnable(boolean flag){
+        if (flag){
+            binding.editTextUser.setEnabled(true);
+            binding.editTextPassword.setEnabled(true);
+            binding.spinnerLogin.setEnabled(true);
+            binding.buttonLogin.setText("登录");
+        }else {
+            binding.editTextUser.setEnabled(false);
+            binding.editTextPassword.setEnabled(false);
+            binding.spinnerLogin.setEnabled(false);
+            binding.buttonLogin.setText("登出");
+        }
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

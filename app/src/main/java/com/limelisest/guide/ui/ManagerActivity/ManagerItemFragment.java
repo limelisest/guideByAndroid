@@ -11,11 +11,11 @@ import android.support.v4.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.limelisest.guide.R;
-import com.limelisest.guide.databinding.FragmentSecondBinding;
+import com.limelisest.guide.databinding.FragmentManagerItemBinding;
 
-public class SecondFragment extends Fragment {
+public class ManagerItemFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentManagerItemBinding binding;
 
     @Override
     public View onCreateView(
@@ -23,7 +23,7 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentManagerItemBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -34,8 +34,8 @@ public class SecondFragment extends Fragment {
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                NavHostFragment.findNavController(ManagerItemFragment.this)
+                        .navigate(R.id.action_ItemFragment_to_HomeFragment);
             }
         });
     }

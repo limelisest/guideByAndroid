@@ -1,5 +1,6 @@
 package com.limelisest.guide;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ public class ManagerActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityManagerBinding binding;
+    public static String User=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +32,6 @@ public class ManagerActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -44,5 +39,14 @@ public class ManagerActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_manager);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null){
+            User=data.getStringExtra("user");
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

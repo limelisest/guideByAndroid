@@ -10,12 +10,14 @@ import android.support.v4.app.Fragment;
 
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.limelisest.guide.ManagerActivity;
 import com.limelisest.guide.R;
-import com.limelisest.guide.databinding.FragmentFirstBinding;
+import com.limelisest.guide.databinding.FragmentManagerHomeBinding;
+import com.limelisest.guide.placeholder.LoginContent;
 
-public class FirstFragment extends Fragment {
+public class ManagerHomeFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private @NonNull FragmentManagerHomeBinding binding;
 
     @Override
     public View onCreateView(
@@ -23,7 +25,8 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentManagerHomeBinding.inflate(inflater, container, false);
+        binding.textviewFirst.setText("你好，"+ LoginContent.LoginUser);
         return binding.getRoot();
 
     }
@@ -34,8 +37,8 @@ public class FirstFragment extends Fragment {
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                NavHostFragment.findNavController(ManagerHomeFragment.this)
+                        .navigate(R.id.action_HomeFragment_to_ItemFragment);
             }
         });
     }
