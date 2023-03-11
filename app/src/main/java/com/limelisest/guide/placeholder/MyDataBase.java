@@ -100,4 +100,18 @@ public class MyDataBase {
         }
         return -1;
     }
+
+    public int LoginAdmin(String USER,String PASSWORD) throws SQLException {
+        assert connection != null;
+        Statement statement = connection.createStatement();
+        //sql语句
+        String sql = "select * from operator where user_name='" +USER+ "' and password='"+PASSWORD+"'";
+        //向数据库发送sql，并获取代表结果集的resultSet
+        ResultSet rs = statement.executeQuery(sql);
+        if (rs.next()){
+            System.out.println(rs);
+            return 0;
+        }
+        return -1;
+    }
 }

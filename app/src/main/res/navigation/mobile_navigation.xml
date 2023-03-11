@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.limelisest.guide.ui.home.HomeFragment"
+        android:name="com.limelisest.guide.ui.MainActivity.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -18,18 +18,18 @@
 
     <fragment
         android:id="@+id/navigation_buy_list"
-        android:name="com.limelisest.guide.ui.buy_list.ItemFragment"
+        android:name="com.limelisest.guide.ui.MainActivity.buy_list.ItemFragment"
         android:label="@string/title_buy_list"
         tools:layout="@layout/fragment_buy_list" />
 
     <fragment
         android:id="@+id/navigation_shopping_cart"
-        android:name="com.limelisest.guide.ui.shopping_cart.ShoppingCartItemFragment"
+        android:name="com.limelisest.guide.ui.MainActivity.shopping_cart.ShoppingCartItemFragment"
         android:label="@string/title_shopping_cart"
         tools:layout="@layout/fragment_shopping_cart_list" />
     <fragment
         android:id="@+id/navigation_register"
-        android:name="com.limelisest.guide.ui.register.RegisterFragment"
+        android:name="com.limelisest.guide.ui.MainActivity.register.RegisterFragment"
         android:label="注册"
         tools:layout="@layout/fragment_register" >
         <action
