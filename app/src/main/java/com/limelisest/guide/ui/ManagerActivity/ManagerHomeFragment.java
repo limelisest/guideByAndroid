@@ -38,7 +38,7 @@ public class ManagerHomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(ManagerHomeFragment.this)
-                        .navigate(R.id.action_HomeFragment_to_ItemFragment);
+                        .navigate(R.id.action_HomeFragment_to_managerItemFragment);
             }
         });
     }

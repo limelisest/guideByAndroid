@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.limelisest.guide.ui.ManagerActivity.ManagerHomeFragment"
+        android:label="管理页面"
+        tools:layout="@layout/fragment_manager_home">
+        <action
+            android:id="@+id/action_HomeFragment_to_managerItemFragment"
+            app:destination="@id/managerItemFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/managerItemFragment"
+        android:name="com.limelisest.guide.ui.ManagerActivity.manageritem.ManagerItemFragment"
+        android:label="物品管理"
+        tools:layout="@layout/fragment_manageritem_list" />
+</navigation>
