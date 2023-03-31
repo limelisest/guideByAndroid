@@ -20,6 +20,15 @@
         android:theme="@style/Theme.Guide"
         tools:targetApi="31">
         <activity
+            android:name=".ui.ManagerActivity.manageritem.ItemInfoActivity"
+            android:exported="false"
+            android:label="@string/title_activity_item_info"
+            android:theme="@style/Theme.Guide.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ManagerActivity"
             android:exported="false"
             android:label="@string/title_activity_manager"

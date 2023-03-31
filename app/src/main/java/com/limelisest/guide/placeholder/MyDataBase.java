@@ -1,5 +1,6 @@
 package com.limelisest.guide.placeholder;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import com.mysql.jdbc.PreparedStatement;
@@ -16,11 +17,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class MyDataBase {
-    // 列表，用于存放 Map
-    public static final List<PlaceholderContent.PlaceholderItem> ITEMS = new ArrayList<PlaceholderContent.PlaceholderItem>();
-
-    // Map 类型的变量，用于存放数据
-    public static final Map<String, PlaceholderContent.PlaceholderItem> ITEM_MAP = new HashMap<String, PlaceholderContent.PlaceholderItem>();
 
     private static final String URL = "jdbc:mysql://120.79.71.233:3306/guide";
     private static final String USER = "guide";
@@ -46,6 +42,12 @@ public class MyDataBase {
     }
 
     List<PlaceholderContent.PlaceholderItem> GetItemList() throws SQLException {
+        // 列表，用于存放 Map
+        List<PlaceholderContent.PlaceholderItem> ITEMS = new ArrayList<PlaceholderContent.PlaceholderItem>();
+
+        // Map 类型的变量，用于存放数据
+        Map<String, PlaceholderContent.PlaceholderItem> ITEM_MAP = new HashMap<String, PlaceholderContent.PlaceholderItem>();
+
         //获取用于向数据库发送sql语句的statement
         assert connection != null;
         Statement statement = connection.createStatement();
@@ -62,6 +64,65 @@ public class MyDataBase {
             ITEM_MAP.put(item.id, item);
         }
         return ITEMS;
+    }
+    List<PlaceholderContent.PlaceholderUser> GetUserList() throws SQLException {
+        // 列表，用于存放 Map
+        List<PlaceholderContent.PlaceholderUser> ITEMS = new ArrayList<PlaceholderContent.PlaceholderUser>();
+
+        //获取用于向数据库发送sql语句的statement
+        assert connection != null;
+        Statement statement = connection.createStatement();
+        //sql语句
+        String sql = "select * from user";
+        //向数据库发送sql，并获取代表结果集的resultSet
+        ResultSet rs = statement.executeQuery(sql);
+        while (rs.next()){
+            String id = String.valueOf(rs.getInt("id"));
+            String user_name = String.valueOf(rs.getString("user_name"));
+            PlaceholderContent.PlaceholderUser item =new PlaceholderContent.PlaceholderUser(id,user_name);
+            ITEMS.add(item);
+        }
+        return ITEMS;
+    }
+
+    public Bundle GetItemInfo(String item_id) throws SQLException{
+        Bundle ITEMS = new Bundle();
+        assert connection != null;
+        Statement statement = connection.createStatement();
+        String sql = "select * from item where id='"+item_id+"'";
+        ResultSet rs = statement.executeQuery(sql);
+        if (rs.next()){
+            String name =String.valueOf(rs.getString("name"));
+            String info=String.valueOf(rs.getString("info"));
+            String price=String.valueOf(rs.getDouble("price"));
+            String area_x=String.valueOf(rs.getInt("area_x"));
+            String area_y=String.valueOf(rs.getInt("area_y"));
+            String QRCODE=String.valueOf(rs.getString("QRCODE"));
+            String EAN13=String.valueOf(rs.getString("EAN13"));
+            String RFID=String.valueOf(rs.getString("RFID"));
+
+            ITEMS.putString("name",name);
+            ITEMS.putString("info",info);
+            ITEMS.putString("price",price);
+            ITEMS.putString("area_x",area_x);
+            ITEMS.putString("area_y",area_y);
+            ITEMS.putString("QRCODE",QRCODE);
+            ITEMS.putString("EAN13",EAN13);
+            ITEMS.putString("RFID",RFID);
+        }
+        return ITEMS;
+    }
+
+    public int UpdateItemInfo(String id,Bundle data) throws SQLException{
+        String name =data.getString("name");
+//        String info=String.valueOf(rs.getString("info"));
+//        String price=String.valueOf(rs.getDouble("price"));
+//        String area_x=String.valueOf(rs.getInt("area_x"));
+//        String area_y=String.valueOf(rs.getInt("area_y"));
+//        String QRCODE=String.valueOf(rs.getString("QRCODE"));
+//        String EAN13=String.valueOf(rs.getString("EAN13"));
+//        String RFID=String.valueOf(rs.getString("RFID"));
+        return 0;
     }
 
     public int LoginUser(String USER,String PASSWORD) throws SQLException {

@@ -18,10 +18,22 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_HomeFragment_to_managerUserFragment"
+            app:destination="@id/managerUserFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/managerItemFragment"
         android:name="com.limelisest.guide.ui.ManagerActivity.manageritem.ManagerItemFragment"
         android:label="物品管理"
         tools:layout="@layout/fragment_manageritem_list" />
+    <fragment
+        android:id="@+id/managerUserFragment"
+        android:name="com.limelisest.guide.ui.ManagerActivity.manageruser.ManagerUserFragment"
+        android:label="用户管理"
+        tools:layout="@layout/fragment_manageruser_list" />
 </navigation>

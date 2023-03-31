@@ -7,7 +7,7 @@ import java.util.List;
 public class PlaceholderContent {
 
     // 数据库
-    static MyDataBase db;
+    public static MyDataBase db;
 
     // 列表，用于存放 PlaceholderItem
     public static List<PlaceholderItem> ITEMS;
@@ -15,10 +15,14 @@ public class PlaceholderContent {
     // 列表，用于存放 购物车(PlaceholderItem)
     public static List<PlaceholderItem> ShoppingCarITEMS = new ArrayList<PlaceholderItem>();
 
+    // 列表，用于存放 用户列表
+    public static List<PlaceholderUser> UserITEMS = new ArrayList<PlaceholderUser>();
+
     static {
         try {
             db = new MyDataBase();
             ITEMS = db.GetItemList();
+            UserITEMS=db.GetUserList();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,4 +46,18 @@ public class PlaceholderContent {
         }
     }
 
+    public static class PlaceholderUser {
+        public final String id;
+        public final String user_name;
+
+        public PlaceholderUser(String id, String user_name) {
+            this.id = id;
+            this.user_name = user_name;
+        }
+
+        @Override
+        public String toString() {
+            return user_name;
+        }
+    }
 }

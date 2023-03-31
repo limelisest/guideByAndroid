@@ -34,11 +34,18 @@ public class ManagerHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
+        binding.buttonItemManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(ManagerHomeFragment.this)
                         .navigate(R.id.action_HomeFragment_to_managerItemFragment);
+            }
+        });
+        binding.buttonUserManager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ManagerHomeFragment.this)
+                        .navigate(R.id.action_HomeFragment_to_managerUserFragment);
             }
         });
     }
