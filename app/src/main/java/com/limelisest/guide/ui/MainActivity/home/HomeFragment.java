@@ -15,9 +15,7 @@ import android.widget.Toast;
 
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.zxing.activity.CaptureActivity;
-import com.google.zxing.util.Constant;
-import com.limelisest.guide.ManagerActivity;
+import com.limelisest.guide.ui.ManagerActivity.ManagerActivity;
 import com.limelisest.guide.R;
 import com.limelisest.guide.databinding.FragmentHomeBinding;
 import com.limelisest.guide.placeholder.LoginContent;

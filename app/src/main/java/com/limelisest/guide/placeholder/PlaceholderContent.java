@@ -27,6 +27,15 @@ public class PlaceholderContent {
             e.printStackTrace();
         }
     }
+    public static void reflash(){
+        try {
+            db = new MyDataBase();
+            ITEMS = db.GetItemList();
+            UserITEMS=db.GetUserList();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public static class PlaceholderItem {
         public final String id;
         public final String name;

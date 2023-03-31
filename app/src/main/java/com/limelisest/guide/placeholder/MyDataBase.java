@@ -113,16 +113,31 @@ public class MyDataBase {
         return ITEMS;
     }
 
-    public int UpdateItemInfo(String id,Bundle data) throws SQLException{
+    public int UpdateItemInfo(Bundle data) throws SQLException{
+        String id=data.getString("id");
         String name =data.getString("name");
-//        String info=String.valueOf(rs.getString("info"));
-//        String price=String.valueOf(rs.getDouble("price"));
-//        String area_x=String.valueOf(rs.getInt("area_x"));
-//        String area_y=String.valueOf(rs.getInt("area_y"));
-//        String QRCODE=String.valueOf(rs.getString("QRCODE"));
-//        String EAN13=String.valueOf(rs.getString("EAN13"));
-//        String RFID=String.valueOf(rs.getString("RFID"));
-        return 0;
+        String info=data.getString("info");
+        String price=data.getString("price");
+        String area_x=data.getString("area_x");
+        String area_y=data.getString("area_y");
+        String QRCODE=data.getString("QRCODE");
+        String EAN13=data.getString("EAN13");
+        String RFID=data.getString("RFID");
+        String sql="update item set " +
+                "name='"+name+"'," +
+                "info='"+info+"'," +
+                "price='"+price+"'," +
+                "area_x='"+area_x+"'," +
+                "area_y='"+area_y+"'," +
+                "QRCODE='"+QRCODE+"'," +
+                "EAN13='"+EAN13+"'," +
+                "RFID='"+RFID+"' where id='"+id+"'";
+        Statement statement = connection.createStatement();
+        int rs = statement.executeUpdate(sql);
+        if (rs != 0){
+            return 0;
+        }
+        return -1;
     }
 
     public int LoginUser(String USER,String PASSWORD) throws SQLException {

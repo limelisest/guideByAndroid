@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.limelisest.guide.ManagerActivity;
 import com.limelisest.guide.R;
 import com.limelisest.guide.databinding.FragmentManagerHomeBinding;
 import com.limelisest.guide.placeholder.LoginContent;

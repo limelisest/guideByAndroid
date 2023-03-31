@@ -1,4 +1,4 @@
-package com.limelisest.guide;
+package com.limelisest.guide.ui.ManagerActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.limelisest.guide.R;
 import com.limelisest.guide.databinding.ActivityManagerBinding;
 
 public class ManagerActivity extends AppCompatActivity {
