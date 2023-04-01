@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -44,10 +45,15 @@ public class ManagerActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null){
-            User=data.getStringExtra("user");
+        if (resultCode == 1000 ){
+            if (data != null){
+                Toast.makeText(this, "111刷新", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            if (data != null){
+                User=data.getStringExtra("user");
+            }
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

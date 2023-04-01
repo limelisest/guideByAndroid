@@ -10,8 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.limelisest.guide.R;
 import com.limelisest.guide.placeholder.PlaceholderContent.PlaceholderItem;
 import com.limelisest.guide.databinding.FragmentManageritemItemBinding;
+import com.limelisest.guide.ui.ManagerActivity.ManagerHomeFragment;
 
 import java.util.List;
 
@@ -43,10 +47,10 @@ public class ManagerItemRecyclerViewAdapter extends RecyclerView.Adapter<Manager
         holder.mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "你点击了"+item_id, Toast.LENGTH_SHORT).show();
                 // 传递点击的id
                 Intent intent=new Intent(view.getContext(), ItemInfoActivity.class);
                 intent.putExtra("item_id",item_id);
+                intent.putExtra("flag","update");
                 view.getContext().startActivity(intent);
             }
         });

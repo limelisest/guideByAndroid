@@ -109,7 +109,14 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constant.REQ_QR_CODE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.REQ_QR_CODE  && resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_SCAN_GALLERY:
+                    handleAlbumPic(data);
+                    break;
+            }
+        }
+        if (requestCode == Constant.REQ_BAR_CODE  && resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_SCAN_GALLERY:
                     handleAlbumPic(data);
@@ -118,6 +125,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 
     /**
      * 处理选择的图片
@@ -170,6 +178,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         RGBLuminanceSource source = new RGBLuminanceSource(scanBitmap);
         BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
         QRCodeReader reader = new QRCodeReader();
+
         try {
             return reader.decode(bitmap1, hints);
         } catch (NotFoundException e) {
@@ -181,6 +190,7 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         }
         return null;
     }
+
 
     @Override
     protected void onResume() {

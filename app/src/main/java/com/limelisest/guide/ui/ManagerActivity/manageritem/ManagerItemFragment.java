@@ -1,5 +1,6 @@
 package com.limelisest.guide.ui.ManagerActivity.manageritem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,8 +16,6 @@ import com.limelisest.guide.placeholder.PlaceholderContent;
  * A fragment representing a list of Items.
  */
 public class ManagerItemFragment extends Fragment {
-    public static String item_id;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,10 +33,15 @@ public class ManagerItemFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent=new Intent(view.getContext(), ItemInfoActivity.class);
-//                startActivity(intent);
+                Intent intent=new Intent(view.getContext(), ItemInfoActivity.class);
+                intent.putExtra("flag","new");
+                startActivity(intent);
+
             }
         });
         return view;
+    }
+    public static void reflash(){
+
     }
 }
