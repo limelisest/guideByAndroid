@@ -210,15 +210,30 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                android:layout_gravity="center_vertical"
                 android:text="RFID："
                 android:textAlignment="textEnd" />
 
-            <EditText
-                android:id="@+id/edit_itemRFID"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edit_itemRFID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/button_ScanRFID"
+                    android:layout_width="55dp"
+                    android:layout_height="wrap_content"
+                    android:text="读卡" />
+            </LinearLayout>
+
         </TableRow>
     </TableLayout>
 

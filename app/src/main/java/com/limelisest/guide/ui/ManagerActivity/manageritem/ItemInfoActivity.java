@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+
 import com.google.zxing.activity.CaptureActivity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.util.Constant;
@@ -101,9 +102,16 @@ public class ItemInfoActivity extends AppCompatActivity {
         binding.buttonScanBarCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                // 条形码扫码
-//                Intent intent = new Intent(view.getContext(), CaptureActivity.class);
-//                startActivityForResult(intent, Constant.REQ_BAR_CODE);
+                // 条形码扫码
+                Intent intent = new Intent(view.getContext(), CaptureActivity.class);
+                startActivityForResult(intent, Constant.REQ_BAR_CODE);
+            }
+        });
+        binding.buttonScanRFID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), NFCActivity.class);
+                startActivityForResult(intent, Constant.REQ_NFC_CODE);
             }
         });
         setContentView(binding.getRoot());
@@ -125,6 +133,11 @@ public class ItemInfoActivity extends AppCompatActivity {
             Bundle bundle = data.getExtras();
             String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
             binding.editItemENA13.setText(scanResult);
+        }
+        if (requestCode == Constant.REQ_NFC_CODE && resultCode == RESULT_OK) {
+            Toast.makeText(this, "扫码成功", Toast.LENGTH_SHORT).show();
+            String scanResult = data.getStringExtra("RFID");
+            binding.editItemRFID.setText(scanResult);
         }
     }
 }

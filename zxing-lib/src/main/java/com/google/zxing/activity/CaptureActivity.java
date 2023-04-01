@@ -30,12 +30,16 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.FormatException;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.R;
+import com.google.zxing.Reader;
 import com.google.zxing.Result;
 import com.google.zxing.camera.CameraManager;
+import com.google.zxing.common.BitArray;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.decoding.CaptureActivityHandler;
 import com.google.zxing.decoding.InactivityTimer;
 import com.google.zxing.decoding.RGBLuminanceSource;
+import com.google.zxing.oned.OneDReader;
+import com.google.zxing.oned.OneDimensionalCodeWriter;
 import com.google.zxing.qrcode.QRCodeReader;
 import com.google.zxing.util.BitmapUtil;
 import com.google.zxing.util.Constant;
@@ -43,6 +47,7 @@ import com.google.zxing.view.ViewfinderView;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 
 
@@ -190,7 +195,36 @@ public class CaptureActivity extends AppCompatActivity implements Callback {
         }
         return null;
     }
+    /**
+     * 扫描条形码图片的方法
+     * @param uri
+     * @return
+     */
+    public Result scanningImage_BarCode(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        Hashtable<DecodeHintType, String> hints = new Hashtable<>();
+        hints.put(DecodeHintType.CHARACTER_SET, "UTF8"); //设置内容的编码
 
+        scanBitmap = BitmapUtil.decodeUri(this, uri, 500, 500);
+        RGBLuminanceSource source = new RGBLuminanceSource(scanBitmap);
+        BinaryBitmap bitmap1 = new BinaryBitmap(new HybridBinarizer(source));
+        OneDReader reader = new OneDReader() {
+            @Override
+            public Result decodeRow(int rowNumber, BitArray row, Map<DecodeHintType, ?> hints) throws NotFoundException, ChecksumException, FormatException {
+                return null;
+            }
+        };
+        try {
+            return reader.decode(bitmap1, hints);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        } catch (FormatException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     protected void onResume() {
