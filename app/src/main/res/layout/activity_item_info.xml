@@ -108,6 +108,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="商品数量："
+                android:textAlignment="textEnd" />
+
+            <EditText
+                android:id="@+id/edit_itemNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="区域(X)："
                 android:textAlignment="textEnd" />
 
@@ -235,6 +253,7 @@
             </LinearLayout>
 
         </TableRow>
+
     </TableLayout>
 
     <Button

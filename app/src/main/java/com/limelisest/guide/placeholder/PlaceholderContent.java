@@ -41,12 +41,14 @@ public class PlaceholderContent {
         public final String name;
         public final String price;
         public String num;
+        public String num_stock;
 
-        public PlaceholderItem(String id, String name, String price,String num) {
+        public PlaceholderItem(String id, String name, String price,String num,String num_stock) {
             this.id = id;
             this.name = name;
             this.price = price;
             this.num = num;
+            this.num_stock=num_stock;
         }
 
         @Override

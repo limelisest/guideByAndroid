@@ -41,7 +41,7 @@ public class MyDataBase {
         return connection;
     }
 
-    List<PlaceholderContent.PlaceholderItem> GetItemList() throws SQLException {
+    public List<PlaceholderContent.PlaceholderItem> GetItemList() throws SQLException {
         // 列表，用于存放 Map
         List<PlaceholderContent.PlaceholderItem> ITEMS = new ArrayList<PlaceholderContent.PlaceholderItem>();
 
@@ -59,13 +59,29 @@ public class MyDataBase {
             String id = String.valueOf(rs.getInt("id"));
             String name = String.valueOf(rs.getString("name"));
             String price = String.valueOf(rs.getString("price"));
-            PlaceholderContent.PlaceholderItem item =new PlaceholderContent.PlaceholderItem(id,name,price,"1");
+            String num = String.valueOf(GetItemNum(id));
+            PlaceholderContent.PlaceholderItem item =new PlaceholderContent.PlaceholderItem(id,name,price,"1",num);
             ITEMS.add(item);
             ITEM_MAP.put(item.id, item);
         }
+        statement.close();
         return ITEMS;
     }
-    List<PlaceholderContent.PlaceholderUser> GetUserList() throws SQLException {
+    public String GetItemNum(String id)throws SQLException{
+        //获取用于向数据库发送sql语句的statement
+        assert connection != null;
+        Statement statement = connection.createStatement();
+        //sql语句
+        String sql = "select * from stock where id='"+id+"'";
+        //向数据库发送sql，并获取代表结果集的resultSet
+        ResultSet rs = statement.executeQuery(sql);
+        if (rs.next()){
+            return String.valueOf(rs.getInt("num"));
+        }
+        statement.close();
+        return "0";
+    }
+    public List<PlaceholderContent.PlaceholderUser> GetUserList() throws SQLException {
         // 列表，用于存放 Map
         List<PlaceholderContent.PlaceholderUser> ITEMS = new ArrayList<PlaceholderContent.PlaceholderUser>();
 
@@ -82,6 +98,7 @@ public class MyDataBase {
             PlaceholderContent.PlaceholderUser item =new PlaceholderContent.PlaceholderUser(id,user_name);
             ITEMS.add(item);
         }
+        statement.close();
         return ITEMS;
     }
 
@@ -110,6 +127,9 @@ public class MyDataBase {
             ITEMS.putString("EAN13",EAN13);
             ITEMS.putString("RFID",RFID);
         }
+        statement.close();
+        String num=GetItemNum(item_id);
+        ITEMS.putString("num",num);
         return ITEMS;
     }
 
@@ -118,6 +138,7 @@ public class MyDataBase {
         String name =data.getString("name");
         String info=data.getString("info");
         String price=data.getString("price");
+        String num= data.getString("num");
         String area_x=data.getString("area_x");
         String area_y=data.getString("area_y");
         String QRCODE=data.getString("QRCODE");
@@ -134,7 +155,22 @@ public class MyDataBase {
                 "RFID='"+RFID+"' where id='"+id+"'";
         Statement statement = connection.createStatement();
         int rs = statement.executeUpdate(sql);
-        if (rs != 0){
+        int rs2 = 0;
+        int rs_row=0;
+        ResultSet rs3=statement.executeQuery("SELECT * FROM `stock` WHERE `id` = +"+id+" ORDER BY `id` ASC");
+        if (rs3.next()){
+            rs_row++;
+        }
+        if (rs_row <= 0 ){
+            statement.executeUpdate("insert into stock set id='"+id+"',num='"+num+"'");
+        }
+        if (rs_row >0){
+            rs2=statement.executeUpdate("update stock set num='"+num+"' where id='"+id+"'");
+        }
+
+
+        statement.close();
+        if (rs != 0 && rs2 !=0){
             return 0;
         }
         return -1;
@@ -148,9 +184,10 @@ public class MyDataBase {
         //向数据库发送sql，并获取代表结果集的resultSet
         ResultSet rs = statement.executeQuery(sql);
         if (rs.next()){
-            System.out.println(rs);
+            statement.close();
             return 0;
         }
+        statement.close();
         return -1;
     }
 
@@ -172,8 +209,10 @@ public class MyDataBase {
         int status= ps.executeUpdate();
 //        ResultSet rs2 = statement.executeQuery(sql2);
         if (status !=0 ){
+            statement.close();
             return 0;
         }
+        statement.close();
         return -1;
     }
 
@@ -185,9 +224,29 @@ public class MyDataBase {
         //向数据库发送sql，并获取代表结果集的resultSet
         ResultSet rs = statement.executeQuery(sql);
         if (rs.next()){
-            System.out.println(rs);
+            statement.close();
             return 0;
         }
+        statement.close();
         return -1;
+    }
+    public Bundle GetUserInfo(String id) throws SQLException{
+        Bundle USER = new Bundle();
+        assert connection != null;
+        Statement statement = connection.createStatement();
+        String sql = "select * from user where id='"+id+"'";
+        ResultSet rs = statement.executeQuery(sql);
+        if (rs.next()){
+            String user_name =String.valueOf(rs.getString("user_name"));
+            String password=String.valueOf(rs.getString("password"));
+            String info=String.valueOf(rs.getString("info"));
+
+            USER.putString("user_name",user_name);
+            USER.putString("password",password);
+            USER.putString("info",info);
+
+        }
+        statement.close();
+        return USER;
     }
 }

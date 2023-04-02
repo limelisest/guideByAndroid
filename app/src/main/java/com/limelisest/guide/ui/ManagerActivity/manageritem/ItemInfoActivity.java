@@ -49,6 +49,7 @@ public class ItemInfoActivity extends AppCompatActivity {
             binding.editItemName.setText(bundle.getString("name"));
             binding.editItemInfo.setText(bundle.getString("info"));
             binding.editItemPrice.setText(bundle.getString("price"));
+            binding.editItemNum.setText(bundle.getString("num"));
             binding.editItemAreaX.setText(bundle.getString("area_x"));
             binding.editItemAreaY.setText(bundle.getString("area_y"));
             binding.editItemQRCode.setText(bundle.getString("QRCODE"));
@@ -67,6 +68,7 @@ public class ItemInfoActivity extends AppCompatActivity {
                     bundle.putString("name", name);
                     bundle.putString("info", String.valueOf(binding.editItemInfo.getText()));
                     bundle.putString("price", String.valueOf(binding.editItemPrice.getText()));
+                    bundle.putString("num", String.valueOf(binding.editItemNum.getText()));
                     bundle.putString("area_x", String.valueOf(binding.editItemAreaX.getText()));
                     bundle.putString("area_y", String.valueOf(binding.editItemAreaY.getText()));
                     bundle.putString("QRCODE", String.valueOf(binding.editItemQRCode.getText()));
@@ -135,7 +137,6 @@ public class ItemInfoActivity extends AppCompatActivity {
             binding.editItemENA13.setText(scanResult);
         }
         if (requestCode == Constant.REQ_NFC_CODE && resultCode == RESULT_OK) {
-            Toast.makeText(this, "扫码成功", Toast.LENGTH_SHORT).show();
             String scanResult = data.getStringExtra("RFID");
             binding.editItemRFID.setText(scanResult);
         }

@@ -43,21 +43,30 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         String v_id=mValues.get(position).id;
         String v_name=mValues.get(position).name;
         String v_price=mValues.get(position).price;
+        int v_num_stock=Integer.parseInt(mValues.get(position).num_stock);
         holder.mItem = mValues.get(position);
         holder.mNameView.setText(v_name);
         holder.mPriceView.setText(String.format("%.2f ￥", Float.parseFloat(v_price)) );
-        holder.mNumView.setText("X"+mValues.get(position).num);
+        holder.mNumView.setText("库存："+v_num_stock+"件");
+        if (v_num_stock <= 0){
+            holder.mAddButton.setEnabled(false);
+            holder.mAddButton.setText("库存不足");
+        }
         holder.mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlaceholderItem item =new PlaceholderItem(v_id,v_name,v_price,"1");
+                PlaceholderItem item =new PlaceholderItem(v_id,v_name,v_price,"1",String.valueOf(v_num_stock));
+                // 购物车数量查重
                 boolean flag=true;
                 for(int i=0;i <PlaceholderContent.ShoppingCarITEMS.size();i++){
                     PlaceholderItem f_item=PlaceholderContent.ShoppingCarITEMS.get(i);
                     if(Objects.equals(f_item.id, v_id)){
-                        f_item.num=String.valueOf(Integer.parseInt(f_item.num)+1);
-                        Toast.makeText(view.getContext(), String.format("物品%s数量为%s", v_name,f_item.num),Toast.LENGTH_SHORT).show();
-
+                        if(Integer.parseInt(f_item.num) >= v_num_stock){
+                            Toast.makeText(view.getContext(), String.format("物品%s已经达到库存上限", v_name),Toast.LENGTH_SHORT).show();
+                        }else {
+                            f_item.num=String.valueOf(Integer.parseInt(f_item.num)+1);
+                            Toast.makeText(view.getContext(), String.format("物品%s数量为%s", v_name,f_item.num),Toast.LENGTH_SHORT).show();
+                        }
                         flag=false;
                         break;
                     }

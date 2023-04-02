@@ -1,5 +1,6 @@
 package com.limelisest.guide.ui.ManagerActivity.manageruser;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,10 +45,10 @@ public class ManagerUserItemRecyclerViewAdapter extends RecyclerView.Adapter<Man
         holder.mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "你点击了"+user_id, Toast.LENGTH_SHORT).show();
-//                Intent intent=new Intent(view.getContext(), ManagerItemInfoActivity.class);
-//                intent.putExtra("id",item_id);
-//                view.getContext().startActivity(intent);
+
+                Intent intent=new Intent(view.getContext(), UserInfoActivity.class);
+                intent.putExtra("id",user_id);
+                view.getContext().startActivity(intent);
             }
         });
 

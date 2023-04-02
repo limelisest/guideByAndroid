@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.limelisest.guide.placeholder.PlaceholderContent;
 import com.limelisest.guide.placeholder.PlaceholderContent.PlaceholderItem;
@@ -38,7 +39,9 @@ public class MyShoppingCartItemRecyclerViewAdapter extends RecyclerView.Adapter<
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     @Override
     public void onBindViewHolder(final ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
         holder.mItem = mValues.get(position);
+        int num_stock=Integer.parseInt(holder.mItem.num_stock);
         holder.mNameView.setText(holder.mItem.name);
         holder.mPriceView.setText(String.format("%.2f ￥", Float.parseFloat(holder.mItem.price)) );
         holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
@@ -47,10 +50,13 @@ public class MyShoppingCartItemRecyclerViewAdapter extends RecyclerView.Adapter<
             @Override
             public void onClick(View view) {
                 String v_num=PlaceholderContent.ShoppingCarITEMS.get(position).num;
-                v_num=PlaceholderContent.ShoppingCarITEMS.get(position).num=String.valueOf(Integer.parseInt(v_num)+1);
-                holder.mNumView.setText("X"+v_num);
-                holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
-
+                if (Integer.parseInt(v_num)>=num_stock){
+                    Toast.makeText(view.getContext(), String.format("物品%s已经达到库存上限", holder.mItem.name), Toast.LENGTH_SHORT).show();
+                }else {
+                    v_num=PlaceholderContent.ShoppingCarITEMS.get(position).num=String.valueOf(Integer.parseInt(v_num)+1);
+                    holder.mNumView.setText("X"+v_num);
+                    holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
+                }
             }
         });
         holder.mReduceItemButton.setOnClickListener(new View.OnClickListener() {

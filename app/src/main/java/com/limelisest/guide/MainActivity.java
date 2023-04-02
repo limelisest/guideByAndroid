@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private ScheduledExecutorService scheduler;
     private MqttClient client;
     private Handler handler;
+    public static boolean ConnectStatus = false;
     private String host = "tcp://120.79.71.233:1883";     // TCP协议
     private String userName = "lime";
     private String passWord = "lime";
     private String mqtt_id = "android";
     private String mqtt_sub_topic = "mqttPublic";
-    private String mqtt_pub_topic = "esp135";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
 
         appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_buy_list, R.id.navigation_shopping_cart,R.id.navigation_register)
@@ -93,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 31:   //连接成功
                         Toast.makeText(MainActivity.this,"连接成功" ,Toast.LENGTH_SHORT).show();
+                        binding.navView.inflateMenu(R.menu.bottom_nav_menu);
                         try {
                             client.subscribe(mqtt_sub_topic,1);
                         } catch (MqttException e) {
