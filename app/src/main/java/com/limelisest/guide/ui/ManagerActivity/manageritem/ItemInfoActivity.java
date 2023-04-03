@@ -1,6 +1,9 @@
 package com.limelisest.guide.ui.ManagerActivity.manageritem;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +11,13 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.Result;
 import com.google.zxing.activity.CaptureActivity;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.decoding.RGBLuminanceSource;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.util.BitmapUtil;
 import com.google.zxing.util.Constant;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -29,7 +37,8 @@ public class ItemInfoActivity extends AppCompatActivity {
     private ActivityItemInfoBinding binding;
     public static String flag = null;
     public static String item_id = null;
-
+    public int CHOOSE_PHOTO = 10000;
+    Bitmap picture;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +64,11 @@ public class ItemInfoActivity extends AppCompatActivity {
             binding.editItemQRCode.setText(bundle.getString("QRCODE"));
             binding.editItemENA13.setText(bundle.getString("EAN13"));
             binding.editItemRFID.setText(bundle.getString("RFID"));
+            binding.imageView.setImageBitmap(PlaceholderContent.db.GetItemPicture(item_id));
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        // 提交修改
         binding.buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,9 +85,11 @@ public class ItemInfoActivity extends AppCompatActivity {
                     bundle.putString("QRCODE", String.valueOf(binding.editItemQRCode.getText()));
                     bundle.putString("EAN13", String.valueOf(binding.editItemENA13.getText()));
                     bundle.putString("RFID", String.valueOf(binding.editItemRFID.getText()));
+
                     if (Objects.equals(flag, "update")){
                         int status=PlaceholderContent.db.UpdateItemInfo(bundle);
-                        if ( status == 0){
+                        int status2=PlaceholderContent.db.UpdateItemPicture(item_id,picture);
+                        if ( status == 0 | status2 == 0){
                             Toast.makeText(view.getContext(), "物品(id="+item_id+")"+name+"信息修改成功", Toast.LENGTH_SHORT).show();
                             PlaceholderContent.reflash();
                             finish();
@@ -84,7 +97,6 @@ public class ItemInfoActivity extends AppCompatActivity {
                     else if (Objects.equals(flag, "new")){
 
                     }
-
                     }else {
                         Toast.makeText(view.getContext(), "修改失败，未知错误", Toast.LENGTH_SHORT).show();
                     }
@@ -93,22 +105,23 @@ public class ItemInfoActivity extends AppCompatActivity {
                 }
             }
         });
+        // 二维码扫码
         binding.buttonScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 二维码扫码
                 Intent intent = new Intent(view.getContext(), CaptureActivity.class);
                 startActivityForResult(intent, Constant.REQ_QR_CODE);
             }
         });
+        // 条形码扫码
         binding.buttonScanBarCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 条形码扫码
                 Intent intent = new Intent(view.getContext(), CaptureActivity.class);
                 startActivityForResult(intent, Constant.REQ_BAR_CODE);
             }
         });
+        // 读卡
         binding.buttonScanRFID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,8 +129,28 @@ public class ItemInfoActivity extends AppCompatActivity {
                 startActivityForResult(intent, Constant.REQ_NFC_CODE);
             }
         });
+        // 添加图片
+        binding.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+                intent.setType("image/*");
+                startActivityForResult(intent, CHOOSE_PHOTO);
+            }
+        });
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
+    }
+
+    /**
+     * 处理选择的图片
+     * @param data
+     */
+    private void handleAlbumPic(Intent data) {
+        //获取选中图片的路径
+        final Uri uri = data.getData();
+        picture = BitmapUtil.decodeUri(this, uri, 128, 128);
+        binding.imageView.setImageBitmap(picture);
     }
 
     // 扫描结果回调
@@ -139,6 +172,10 @@ public class ItemInfoActivity extends AppCompatActivity {
         if (requestCode == Constant.REQ_NFC_CODE && resultCode == RESULT_OK) {
             String scanResult = data.getStringExtra("RFID");
             binding.editItemRFID.setText(scanResult);
+        }
+        if (requestCode == CHOOSE_PHOTO && resultCode == RESULT_OK) {
+            //读取照片
+            handleAlbumPic(data);
         }
     }
 }

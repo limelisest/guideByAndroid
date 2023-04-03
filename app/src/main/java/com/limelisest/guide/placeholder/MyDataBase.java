@@ -1,10 +1,23 @@
 package com.limelisest.guide.placeholder;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.zxing.util.BitmapUtil;
+import com.mysql.jdbc.BlobFromLocator;
 import com.mysql.jdbc.PreparedStatement;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -174,6 +187,56 @@ public class MyDataBase {
             return 0;
         }
         return -1;
+    }
+    public int UpdateItemPicture(String id, Bitmap bitmap) throws SQLException {
+        //转换图片为Base64
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        //查询存在
+        Statement statement=connection.createStatement();
+        ResultSet rs=statement.executeQuery("select count(*) from picture where id='"+id+"'");
+        int rs_num=0;
+        while (rs.next()){
+            rs_num=rs.getInt("count(*)");
+        }
+        if (rs_num == 0 ){
+            //不存在 ，创建图片
+            PreparedStatement insert=(PreparedStatement)connection.prepareStatement(
+                    "insert into picture values(?,?)",Statement.RETURN_GENERATED_KEYS);
+            insert.setInt(1, Integer.parseInt(id));
+            insert.setString(2, imageString);
+            int status=insert.executeUpdate();
+            if(status != 0){
+                return 0;
+            }
+        }else {
+            // 存在，修改图片
+            //不存在 ，创建图片
+            PreparedStatement insert=(PreparedStatement)connection.prepareStatement(
+                    "update picture set picture=? where id=?",Statement.RETURN_GENERATED_KEYS);
+            insert.setString(1, imageString);
+            insert.setInt(2, Integer.parseInt(id));
+            int status=insert.executeUpdate();
+            if(status != 0){
+                return 0;
+            }
+        }
+
+        return -1;
+    }
+    public Bitmap GetItemPicture(String id) throws SQLException{
+        //查询存在
+        Statement statement=connection.createStatement();
+        ResultSet rs=statement.executeQuery("select * from picture where id='"+id+"'");
+        Bitmap bitmap=null;
+        while (rs.next()){
+            String imageString=rs.getString("picture");
+            byte[] imageBytes = Base64.decode(imageString, Base64.DEFAULT);
+            bitmap= BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        }
+        return bitmap;
     }
     public List<PlaceholderContent.PlaceholderItem> GetShoppingCarItemNumList(String user_name) throws SQLException {
         List<PlaceholderContent.PlaceholderItem> ITEMS=new ArrayList<>();

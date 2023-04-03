@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,12 @@ public class MyShoppingCartItemRecyclerViewAdapter extends RecyclerView.Adapter<
         holder.mPriceView.setText(String.format("%.2f ￥", Float.parseFloat(holder.mItem.price)) );
         holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
         holder.mNumView.setText("X"+holder.mItem.num);
+        // 读取头图
+        try {
+            holder.mImageView.setImageBitmap(PlaceholderContent.db.GetItemPicture(holder.mItem.id));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         holder.mAddItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -127,6 +134,7 @@ public class MyShoppingCartItemRecyclerViewAdapter extends RecyclerView.Adapter<
         public final TextView mAllPriceView;
         public final Button mAddItemButton;
         public final Button mReduceItemButton;
+        public final ImageView mImageView;
         public PlaceholderItem mItem;
 
         public ViewHolder(FragmentShoppingCartItemBinding binding) {
@@ -137,6 +145,7 @@ public class MyShoppingCartItemRecyclerViewAdapter extends RecyclerView.Adapter<
             mAllPriceView=binding.itemAllPrice;
             mAddItemButton = binding.buttonAddItem;
             mReduceItemButton = binding.buttonReduceItem;
+            mImageView=binding.imageView;
 
         }
 

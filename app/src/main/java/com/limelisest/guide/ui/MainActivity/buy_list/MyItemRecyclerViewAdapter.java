@@ -1,11 +1,13 @@
 package com.limelisest.guide.ui.MainActivity.buy_list;
 
 import android.annotation.SuppressLint;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,12 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         holder.mNameView.setText(v_name);
         holder.mPriceView.setText(String.format("%.2f ￥", Float.parseFloat(v_price)) );
         holder.mNumView.setText("库存："+v_num_stock+"件");
+        // 读取头图
+        try {
+            holder.mImageView.setImageBitmap(PlaceholderContent.db.GetItemPicture(holder.mItem.id));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         if (v_num_stock <= 0){
             holder.mAddButton.setEnabled(false);
             holder.mAddButton.setText("库存不足");
@@ -113,13 +121,14 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final TextView mNumView;
         public PlaceholderItem mItem;
         public final Button mAddButton;
-
+        public final ImageView mImageView;
         public ViewHolder(FragmentBuyItemBinding binding) {
             super(binding.getRoot());
             mNameView = binding.itemName;
             mPriceView = binding.itemPrice;
             mNumView = binding.itemNum;
             mAddButton=binding.buttonAddItem;
+            mImageView=binding.imageView;
         }
 
         @Override
