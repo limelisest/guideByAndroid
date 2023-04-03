@@ -11,10 +11,12 @@ import android.widget.Toast;
 
 
 import com.limelisest.guide.databinding.FragmentBuyItemBinding;
+import com.limelisest.guide.placeholder.LoginContent;
 import com.limelisest.guide.placeholder.PlaceholderContent;
 import com.limelisest.guide.placeholder.PlaceholderContent.PlaceholderItem;
 
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,27 +57,47 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         holder.mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlaceholderItem item =new PlaceholderItem(v_id,v_name,v_price,"1",String.valueOf(v_num_stock));
-                // 购物车数量查重
-                boolean flag=true;
-                for(int i=0;i <PlaceholderContent.ShoppingCarITEMS.size();i++){
-                    PlaceholderItem f_item=PlaceholderContent.ShoppingCarITEMS.get(i);
-                    if(Objects.equals(f_item.id, v_id)){
-                        if(Integer.parseInt(f_item.num) >= v_num_stock){
-                            Toast.makeText(view.getContext(), String.format("物品%s已经达到库存上限", v_name),Toast.LENGTH_SHORT).show();
-                        }else {
-                            f_item.num=String.valueOf(Integer.parseInt(f_item.num)+1);
-                            Toast.makeText(view.getContext(), String.format("物品%s数量为%s", v_name,f_item.num),Toast.LENGTH_SHORT).show();
+                if (LoginContent.LoginUser==null){
+                    Toast.makeText(view.getContext(),"请先登录",Toast.LENGTH_SHORT).show();
+                }else {
+                    PlaceholderItem item =new PlaceholderItem(v_id,v_name,v_price,"1",String.valueOf(v_num_stock));
+                    // 购物车数量查重
+                    boolean flag=true;
+                    for(int i=0;i <PlaceholderContent.ShoppingCarITEMS.size();i++){
+                        PlaceholderItem f_item=PlaceholderContent.ShoppingCarITEMS.get(i);
+                        if(Objects.equals(f_item.id, v_id)){
+                            if(Integer.parseInt(f_item.num) >= v_num_stock){
+                                Toast.makeText(view.getContext(), String.format("物品%s已经达到库存上限", v_name),Toast.LENGTH_SHORT).show();
+                            }else {
+                                try {
+                                    f_item.num=String.valueOf(Integer.parseInt(f_item.num)+1);
+                                    int status=PlaceholderContent.db.SetShoppingCarItem(v_id,f_item.num);
+                                    if(status == 0){
+                                        Toast.makeText(view.getContext(), String.format("物品%s数量为%s", v_name,f_item.num),Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            flag=false;
+                            break;
                         }
-                        flag=false;
-                        break;
+                    }
+                    if (flag){
+                        int status= 0;
+                        try {
+                            status = PlaceholderContent.db.SetShoppingCarItem(v_id,"1");
+                            PlaceholderContent.ShoppingCarITEMS.add(item);
+                            if(status == 0){
+                                Toast.makeText(view.getContext(), String.format("物品%s添加到购物车", v_name),Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 }
-                if (flag){
-                    PlaceholderContent.ShoppingCarITEMS.add(item);
-                    Toast.makeText(view.getContext(), String.format("物品%s添加到购物车", v_name),Toast.LENGTH_SHORT).show();
-                }
-
             }
         });
     }

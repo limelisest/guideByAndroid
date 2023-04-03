@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.limelisest.guide.placeholder.PlaceholderContent;
 import com.limelisest.guide.ui.ManagerActivity.ManagerActivity;
 import com.limelisest.guide.R;
 import com.limelisest.guide.databinding.FragmentHomeBinding;
@@ -154,15 +155,18 @@ public class HomeFragment extends Fragment {
 
     private void SetLoginEnable(boolean flag){
         if (flag){
+            // 切换为未登录状态
             binding.editTextUser.setEnabled(true);
             binding.editTextPassword.setEnabled(true);
             binding.spinnerLogin.setEnabled(true);
             binding.buttonLogin.setText("登录");
         }else {
+            // 切换为登录状态
             binding.editTextUser.setEnabled(false);
             binding.editTextPassword.setEnabled(false);
             binding.spinnerLogin.setEnabled(false);
             binding.buttonLogin.setText("登出");
+            PlaceholderContent.getShoppingCarItemList();
         }
     }
     @Override

@@ -36,6 +36,14 @@ public class PlaceholderContent {
             e.printStackTrace();
         }
     }
+    public static void getShoppingCarItemList() {
+        try {
+            ShoppingCarITEMS =db.GetShoppingCarItemNumList(LoginContent.LoginUser);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
     public static class PlaceholderItem {
         public final String id;
         public final String name;

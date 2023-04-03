@@ -15,6 +15,7 @@ import com.limelisest.guide.placeholder.PlaceholderContent;
 import com.limelisest.guide.placeholder.PlaceholderContent.PlaceholderItem;
 import com.limelisest.guide.databinding.FragmentShoppingCartItemBinding;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -53,9 +54,17 @@ public class MyShoppingCartItemRecyclerViewAdapter extends RecyclerView.Adapter<
                 if (Integer.parseInt(v_num)>=num_stock){
                     Toast.makeText(view.getContext(), String.format("物品%s已经达到库存上限", holder.mItem.name), Toast.LENGTH_SHORT).show();
                 }else {
-                    v_num=PlaceholderContent.ShoppingCarITEMS.get(position).num=String.valueOf(Integer.parseInt(v_num)+1);
-                    holder.mNumView.setText("X"+v_num);
-                    holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
+                    try {
+                        v_num=PlaceholderContent.ShoppingCarITEMS.get(position).num=String.valueOf(Integer.parseInt(v_num)+1);
+                        int status=PlaceholderContent.db.SetShoppingCarItem(holder.mItem.id,v_num);
+                        if(status == 0){
+                            holder.mNumView.setText("X"+v_num);
+                            holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }
         });
@@ -71,18 +80,34 @@ public class MyShoppingCartItemRecyclerViewAdapter extends RecyclerView.Adapter<
                         @SuppressLint("NotifyDataSetChanged")
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            PlaceholderContent.ShoppingCarITEMS.remove(position);
-                            notifyDataSetChanged();
+                            try {
+                                PlaceholderContent.ShoppingCarITEMS.remove(position);
+                                int status = PlaceholderContent.db.SetShoppingCarItem(holder.mItem.id,"0");
+                                if(status == 0){
+                                    notifyDataSetChanged();
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     });
                     builder.setNeutralButton("取消",null);
                     builder.show();
                 }
                 else{
-                    v_num=PlaceholderContent.ShoppingCarITEMS.get(position).num=String.valueOf(Integer.parseInt(v_num)-1);
-                    holder.mNumView.setText("X"+v_num);
+                    try {
+                        v_num=PlaceholderContent.ShoppingCarITEMS.get(position).num=String.valueOf(Integer.parseInt(v_num)-1);
+                        int status=PlaceholderContent.db.SetShoppingCarItem(holder.mItem.id,v_num);
+                        if(status == 0){
+                            holder.mNumView.setText("X"+v_num);
+                            holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
-                holder.mAllPriceView.setText(String.format("%.2f ￥",Float.parseFloat(holder.mItem.price)*Integer.parseInt(holder.mItem.num)));
+
 
 
             }

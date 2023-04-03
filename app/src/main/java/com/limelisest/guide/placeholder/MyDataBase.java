@@ -175,6 +175,53 @@ public class MyDataBase {
         }
         return -1;
     }
+    public List<PlaceholderContent.PlaceholderItem> GetShoppingCarItemNumList(String user_name) throws SQLException {
+        List<PlaceholderContent.PlaceholderItem> ITEMS=new ArrayList<>();
+        assert connection != null;
+        Statement statement = connection.createStatement();
+        ResultSet rs=statement.executeQuery("select * from shopping_car where user_name='"+user_name+"'");
+        while (rs.next()){
+            String item_id=String.valueOf(rs.getInt("item_id"));
+            String num=String.valueOf(rs.getInt("num"));
+            Bundle bundle=GetItemInfo(item_id);
+            String num_stock=GetItemNum(item_id);
+            String name=bundle.getString("name");
+            String price=bundle.getString("price");
+            PlaceholderContent.PlaceholderItem item=new PlaceholderContent.PlaceholderItem(item_id,name,price,num,num_stock);
+            ITEMS.add(item);
+        }
+        statement.close();
+        return ITEMS;
+    }
+
+    public int SetShoppingCarItem(String item_id,String num) throws SQLException {
+        String user_name=LoginContent.LoginUser;
+        // 查询 ShoppingCar 数据库内有无符合条件的项目
+        Statement statement=connection.createStatement();
+        ResultSet rs=statement.executeQuery("select * from shopping_car where user_name='"+user_name+"' and item_id='"+item_id+"'");
+        int rs2=0;
+        int rs3=0;
+        int rs4=0;
+        int i=0;
+        while (rs.next()){
+            i++;
+        }
+        if(i==0){
+            rs3 = statement.executeUpdate("insert into shopping_car set user_name='"+user_name+"',item_id='"+item_id+"',num='"+num+"'");
+        }else{
+            if (Integer.parseInt(num)>0){
+                rs2 =statement.executeUpdate("update shopping_car set num='"+num+"' where user_name='"+user_name+"' and item_id='"+item_id+"'");
+            }else {
+                rs4=statement.executeUpdate("delete from shopping_car where user_name='"+user_name+"' and item_id='"+item_id+"'");
+            }
+
+        }
+        if (rs2!=0 | rs3!=0 | rs4!=0){
+            return 0;
+        }
+        return -1;
+
+    }
 
     public int LoginUser(String USER,String PASSWORD) throws SQLException {
         assert connection != null;
