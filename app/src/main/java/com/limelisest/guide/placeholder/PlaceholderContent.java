@@ -1,5 +1,8 @@
 package com.limelisest.guide.placeholder;
 
+import com.limelisest.guide.ui.MainActivity.buy_list.ItemFragment;
+import com.limelisest.guide.ui.MainActivity.home.HomeFragment;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,20 +21,23 @@ public class PlaceholderContent {
     // 列表，用于存放 用户列表
     public static List<PlaceholderUser> UserITEMS = new ArrayList<PlaceholderUser>();
 
+    // 列表，用于存放商品种类
+    public static List<String> ItemClass = new ArrayList<String>();
     static {
         try {
             db = new MyDataBase();
-            ITEMS = db.GetItemList();
+            ITEMS = db.GetItemList(ItemFragment.item_class);
             UserITEMS=db.GetUserList();
+            ItemClass=db.GetItemClass();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
     public static void reflash(){
         try {
-            db = new MyDataBase();
-            ITEMS = db.GetItemList();
+            ITEMS = db.GetItemList(ItemFragment.item_class);
             UserITEMS=db.GetUserList();
+            ItemClass=db.GetItemClass();
         } catch (SQLException e) {
             e.printStackTrace();
         }

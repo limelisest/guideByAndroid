@@ -54,7 +54,8 @@ public class MyDataBase {
         return connection;
     }
 
-    public List<PlaceholderContent.PlaceholderItem> GetItemList() throws SQLException {
+    public List<PlaceholderContent.PlaceholderItem> GetItemList(String _class) throws SQLException {
+
         // 列表，用于存放 Map
         List<PlaceholderContent.PlaceholderItem> ITEMS = new ArrayList<PlaceholderContent.PlaceholderItem>();
 
@@ -65,7 +66,12 @@ public class MyDataBase {
         assert connection != null;
         Statement statement = connection.createStatement();
         //sql语句
-        String sql = "select * from item";
+        String sql = null;
+        if(Objects.equals(_class, "所有商品")){
+            sql = "select * from item";
+        }else {
+            sql = "select * from item where class='"+_class+"'";
+        }
         //向数据库发送sql，并获取代表结果集的resultSet
         ResultSet rs = statement.executeQuery(sql);
         while (rs.next()){
@@ -130,6 +136,7 @@ public class MyDataBase {
             String QRCODE=String.valueOf(rs.getString("QRCODE"));
             String EAN13=String.valueOf(rs.getString("EAN13"));
             String RFID=String.valueOf(rs.getString("RFID"));
+            String _class=String.valueOf(rs.getString("class"));
 
             ITEMS.putString("name",name);
             ITEMS.putString("info",info);
@@ -139,13 +146,24 @@ public class MyDataBase {
             ITEMS.putString("QRCODE",QRCODE);
             ITEMS.putString("EAN13",EAN13);
             ITEMS.putString("RFID",RFID);
+            ITEMS.putString("class",_class);
+
         }
         statement.close();
         String num=GetItemNum(item_id);
         ITEMS.putString("num",num);
         return ITEMS;
     }
-
+    public List<String> GetItemClass() throws SQLException {
+        Statement statement=connection.createStatement();
+        ResultSet rs=statement.executeQuery("SELECT class FROM item GROUP BY class");
+        List<String> itemClass=new ArrayList<>();
+        itemClass.add("所有商品");
+        while (rs.next()){
+            itemClass.add(rs.getString("class"));
+        }
+        return itemClass;
+    }
     public int UpdateItemInfo(Bundle data) throws SQLException{
         String id=data.getString("id");
         String name =data.getString("name");
@@ -157,6 +175,7 @@ public class MyDataBase {
         String QRCODE=data.getString("QRCODE");
         String EAN13=data.getString("EAN13");
         String RFID=data.getString("RFID");
+        String _class=data.getString("class");
         String sql="update item set " +
                 "name='"+name+"'," +
                 "info='"+info+"'," +
@@ -165,6 +184,7 @@ public class MyDataBase {
                 "area_y='"+area_y+"'," +
                 "QRCODE='"+QRCODE+"'," +
                 "EAN13='"+EAN13+"'," +
+                "class='"+_class+"'," +
                 "RFID='"+RFID+"' where id='"+id+"'";
         Statement statement = connection.createStatement();
         int rs = statement.executeUpdate(sql);
@@ -197,6 +217,7 @@ public class MyDataBase {
         //查询存在
         Statement statement=connection.createStatement();
         ResultSet rs=statement.executeQuery("select count(*) from picture where id='"+id+"'");
+
         int rs_num=0;
         while (rs.next()){
             rs_num=rs.getInt("count(*)");
@@ -223,7 +244,7 @@ public class MyDataBase {
                 return 0;
             }
         }
-
+        statement.close();
         return -1;
     }
     public Bitmap GetItemPicture(String id) throws SQLException{

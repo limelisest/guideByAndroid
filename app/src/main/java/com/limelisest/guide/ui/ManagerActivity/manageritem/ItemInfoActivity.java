@@ -1,13 +1,18 @@
 package com.limelisest.guide.ui.ManagerActivity.manageritem;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -28,6 +33,8 @@ import com.limelisest.guide.placeholder.MyDataBase;
 import com.limelisest.guide.placeholder.PlaceholderContent;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -38,11 +45,11 @@ public class ItemInfoActivity extends AppCompatActivity {
     public static String flag = null;
     public static String item_id = null;
     public int CHOOSE_PHOTO = 10000;
-    Bitmap picture;
+    Bitmap picture=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        List<String> list=new ArrayList<>(PlaceholderContent.ItemClass);
         // 接收id
         item_id=getIntent().getStringExtra("item_id");
         flag=getIntent().getStringExtra("flag");
@@ -64,6 +71,22 @@ public class ItemInfoActivity extends AppCompatActivity {
             binding.editItemQRCode.setText(bundle.getString("QRCODE"));
             binding.editItemENA13.setText(bundle.getString("EAN13"));
             binding.editItemRFID.setText(bundle.getString("RFID"));
+            String item_class=bundle.getString("class");
+
+            list.remove(0);
+            ArrayAdapter<String> spinnerDataAdapter = new ArrayAdapter<String>(ItemInfoActivity.this,
+                    android.R.layout.simple_spinner_dropdown_item, list);
+            spinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            binding.spinnerItemClass.setAdapter(spinnerDataAdapter);
+            int i=0;
+            for(String line: list){
+                if (Objects.equals(line, item_class)){
+                    break;
+                }
+                i++;
+            }
+            binding.spinnerItemClass.setSelection(i);
+
             binding.imageView.setImageBitmap(PlaceholderContent.db.GetItemPicture(item_id));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,11 +108,15 @@ public class ItemInfoActivity extends AppCompatActivity {
                     bundle.putString("QRCODE", String.valueOf(binding.editItemQRCode.getText()));
                     bundle.putString("EAN13", String.valueOf(binding.editItemENA13.getText()));
                     bundle.putString("RFID", String.valueOf(binding.editItemRFID.getText()));
+                    bundle.putString("class",String.valueOf(list.get(binding.spinnerItemClass.getSelectedItemPosition())));
 
                     if (Objects.equals(flag, "update")){
                         int status=PlaceholderContent.db.UpdateItemInfo(bundle);
-                        int status2=PlaceholderContent.db.UpdateItemPicture(item_id,picture);
-                        if ( status == 0 | status2 == 0){
+                        int status2=0;
+                        if (picture != null){
+                            status2=PlaceholderContent.db.UpdateItemPicture(item_id,picture);
+                        }
+                        if ( status == 0 && status2 == 0){
                             Toast.makeText(view.getContext(), "物品(id="+item_id+")"+name+"信息修改成功", Toast.LENGTH_SHORT).show();
                             PlaceholderContent.reflash();
                             finish();
@@ -103,6 +130,35 @@ public class ItemInfoActivity extends AppCompatActivity {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        // 输入新种类
+        binding.buttonItemClassNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText inputServer = new EditText(ItemInfoActivity.this);
+                inputServer.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+                AlertDialog.Builder builder = new AlertDialog.Builder(ItemInfoActivity.this);
+                builder.setTitle("输入种类名").setIcon(android.R.drawable.ic_dialog_info)
+                        .setView(inputServer).setNegativeButton("取消", null);
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String _sign = inputServer.getText().toString();
+                        if(_sign!=null && !_sign.isEmpty()) {
+                            list.add(_sign);
+                            ArrayAdapter<String> spinnerDataAdapter = new ArrayAdapter<String>(ItemInfoActivity.this,
+                                    android.R.layout.simple_spinner_dropdown_item, list);
+                            spinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            binding.spinnerItemClass.setAdapter(spinnerDataAdapter);
+                            binding.spinnerItemClass.setSelection(list.size()-1);
+                        }
+                        else{
+                            Toast.makeText(ItemInfoActivity.this,"输入的商品种类为空",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.show();
             }
         });
         // 二维码扫码
