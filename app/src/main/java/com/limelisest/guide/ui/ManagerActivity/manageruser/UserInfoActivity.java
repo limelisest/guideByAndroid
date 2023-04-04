@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.limelisest.guide.R;
@@ -47,7 +48,31 @@ public class UserInfoActivity extends AppCompatActivity {
         binding.buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                String user_name= String.valueOf(binding.editUserName.getText());
+                String password= String.valueOf(binding.editUserPassword.getText());
+                String info= String.valueOf(binding.editUserInfo.getText());
+                Bundle bundle=new Bundle();
+                bundle.putString("id",id);
+                bundle.putString("user_name",user_name);
+                bundle.putString("password",password);
+                bundle.putString("info",info);
+                if (user_name.equals("") | password.equals("")){
+                    Toast.makeText(UserInfoActivity.this,"用户名或者密码为空",Toast.LENGTH_SHORT).show();
+                }else{
+                    try {
+                        int status = PlaceholderContent.db.UpdateUserInfo(bundle);
+                        if (status==0){
+                            Toast.makeText(UserInfoActivity.this,"用户信息更新成功",Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                        if(status == -1){
+                            Toast.makeText(UserInfoActivity.this,"更新失败，未知错误",Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         });
 

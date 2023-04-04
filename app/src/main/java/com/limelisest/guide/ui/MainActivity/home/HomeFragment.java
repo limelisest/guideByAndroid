@@ -90,8 +90,7 @@ public class HomeFragment extends Fragment {
                         Toast t1= Toast.makeText(root.getContext(), "登录中。。。", Toast.LENGTH_SHORT);
                         t1.show();
                         try {
-                            MyDataBase db=new MyDataBase();
-                            int status=db.LoginUser(user,password);
+                            int status=PlaceholderContent.db.LoginUser(user,password);
                             t1.cancel();
                             if (status==0){
                                 LoginContent.LoginUser=user;
@@ -117,8 +116,7 @@ public class HomeFragment extends Fragment {
                         Toast t1= Toast.makeText(root.getContext(), "登录中。。。", Toast.LENGTH_SHORT);
                         t1.show();
                         try {
-                            MyDataBase db=new MyDataBase();
-                            int status=db.LoginAdmin(user,password);
+                            int status=PlaceholderContent.db.LoginAdmin(user,password);
                             t1.cancel();
                             if (status==0){
                                 LoginContent.LoginUser=user;

@@ -333,12 +333,10 @@ public class MyDataBase {
             return 1;//检测到已有用户名
         }
         //插入新用户
-//        String sql2= String.format("INSERT INTO `guide`.`user` (`id`, `user_name`, `password`, `info`) VALUES (NULL, '%s', '%s', NULL);", USER,PASSWORD);
         PreparedStatement ps = (PreparedStatement) connection.prepareStatement("INSERT INTO `guide`.`user` (`id`, `user_name`, `password`, `info`) VALUES (NULL, ?, ?, NULL);");
         ps.setString(1,USER);
         ps.setString(2,PASSWORD);
         int status= ps.executeUpdate();
-//        ResultSet rs2 = statement.executeQuery(sql2);
         if (status !=0 ){
             statement.close();
             return 0;
@@ -379,5 +377,22 @@ public class MyDataBase {
         }
         statement.close();
         return USER;
+    }
+
+    public int UpdateUserInfo(Bundle data) throws SQLException{
+        String id=data.getString("id");
+        String user_name=data.getString("user_name");
+        String password=data.getString("password");
+        String info=data.getString("info");
+        assert connection != null;
+        Statement statement = connection.createStatement();
+
+        int status=statement.executeUpdate("update user set user_name='"+user_name+"',password='"+password+"',info='"+info+"' where id='"+id+"'");
+        if (status != 0){
+            statement.close();
+            return 0;
+        }
+        statement.close();
+        return -1;
     }
 }

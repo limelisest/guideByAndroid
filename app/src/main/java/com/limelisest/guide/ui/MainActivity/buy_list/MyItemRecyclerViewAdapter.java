@@ -102,8 +102,6 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-
-
                     }
                 }
             }
